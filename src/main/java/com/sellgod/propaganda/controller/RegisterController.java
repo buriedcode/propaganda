@@ -36,7 +36,6 @@ public class RegisterController {
        @PostMapping(value = "/register")
        public R register(@RequestBody RegisterDto  registerDto){
            EntityWrapper  entityWrapper  = new EntityWrapper();
-
            entityWrapper.eq("phone",registerDto.getPhone());
            UserEntity  userEntity = userService.selectOne(entityWrapper);
            if(userEntity!=null){
