@@ -1,5 +1,6 @@
 package com.sellgod.propaganda.controller;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.google.gson.Gson;
 import com.qiniu.common.QiniuException;
 import com.qiniu.common.Zone;
@@ -34,7 +35,13 @@ public class RegisterController {
     private UserService   userService;
        @PostMapping(value = "/register")
        public R register(@RequestBody RegisterDto  registerDto){
-           UserEntity  userEntity  = new UserEntity();
+           EntityWrapper  entityWrapper  = new EntityWrapper();
+           entityWrapper.eq("phone",registerDto.getPhone());
+           UserEntity  userEntity = userService.selectOne(entityWrapper);
+           if(userEntity!=null){
+               return R.error("手机号码已注册");
+           }
+           userEntity  = new UserEntity();
            BeanUtils.copyProperties(registerDto,userEntity);
            if(userService.insert(userEntity)) {
                return R.ok();
