@@ -38,6 +38,7 @@ public class RegisterController {
            EntityWrapper  entityWrapper  = new EntityWrapper();
            entityWrapper.eq("phone",registerDto.getPhone());
            UserEntity  userEntity = userService.selectOne(entityWrapper);
+
            if(userEntity!=null){
                return R.error("手机号码已注册");
            }
