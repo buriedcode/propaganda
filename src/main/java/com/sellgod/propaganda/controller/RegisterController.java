@@ -36,7 +36,6 @@ public class RegisterController {
        public R register(@RequestBody RegisterDto  registerDto){
            UserEntity  userEntity  = new UserEntity();
            BeanUtils.copyProperties(registerDto,userEntity);
-           //测试提交
            if(userService.insert(userEntity)) {
                return R.ok();
            }else{
