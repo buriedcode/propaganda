@@ -13,6 +13,7 @@ import com.sellgod.propaganda.entity.UserEntity;
 import com.sellgod.propaganda.service.UserOperationService;
 import com.sellgod.propaganda.service.UserService;
 import com.sellgod.propaganda.utils.R;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,6 +25,7 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/user")
+@Slf4j
 public class RegisterController {
 
 
@@ -34,6 +36,7 @@ public class RegisterController {
     private UserService   userService;
        @PostMapping(value = "/register")
        public R register(@RequestBody RegisterDto  registerDto){
+           System.out.println("111111");
            UserEntity  userEntity  = new UserEntity();
            BeanUtils.copyProperties(registerDto,userEntity);
            if(userService.insert(userEntity)) {
@@ -44,7 +47,9 @@ public class RegisterController {
        }
        @PostMapping(value = "/fileUpload")
        public R upload(@RequestParam(value = "file") MultipartFile file) {
-          return  userOperationService.saveFile(file);
+           R r = userOperationService.saveFile(file);
+           System.out.println(""+r.toString());
+           return  r;
        }
 
 
