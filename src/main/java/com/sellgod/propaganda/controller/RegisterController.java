@@ -48,6 +48,7 @@ public class RegisterController {
        @PostMapping(value = "/fileUpload")
        public R upload(@RequestParam(value = "file") MultipartFile file) {
            R r = userOperationService.saveFile(file);
+
            System.out.println(""+r.toString());
            return  r;
        }
