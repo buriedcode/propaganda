@@ -22,6 +22,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -36,7 +38,6 @@ public class RegisterController {
     private UserService   userService;
        @PostMapping(value = "/register")
        public R register(@RequestBody RegisterDto  registerDto){
-           System.out.println("111111");
            UserEntity  userEntity  = new UserEntity();
            BeanUtils.copyProperties(registerDto,userEntity);
            if(userService.insert(userEntity)) {
@@ -48,9 +49,15 @@ public class RegisterController {
        @PostMapping(value = "/fileUpload")
        public R upload(@RequestParam(value = "file") MultipartFile file) {
            R r = userOperationService.saveFile(file);
-
-           System.out.println(""+r.toString());
            return  r;
+       }
+
+       @GetMapping(value = "/banaer")
+       public R getBananer(){
+           List<String>   imgs =  new ArrayList<>();
+           imgs.add("http://pn5mg6279.bkt.clouddn.com/1551668884147.jpg");
+           imgs.add("http://pn5mg6279.bkt.clouddn.com/1551668884147.jpg");
+           return R.withD(imgs);
        }
 
 

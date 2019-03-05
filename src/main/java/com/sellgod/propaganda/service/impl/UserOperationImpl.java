@@ -8,6 +8,7 @@ import com.qiniu.storage.Configuration;
 import com.qiniu.storage.UploadManager;
 import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.util.Auth;
+import com.sellgod.propaganda.dto.UploadFileDto;
 import com.sellgod.propaganda.entity.FileEntity;
 import com.sellgod.propaganda.service.FileService;
 import com.sellgod.propaganda.service.UserOperationService;
@@ -48,8 +49,7 @@ public class UserOperationImpl implements UserOperationService {
             FileEntity  fileEntity  = new FileEntity();
             fileEntity.setUrl(picUrl);
             if(fileService.insert(fileEntity)){
-                Long id = fileEntity.getId();
-                return R.withD(id);
+                return R.withD(fileEntity);
             }
             return R.error("图片添加失败");
         } catch (IOException e) {
