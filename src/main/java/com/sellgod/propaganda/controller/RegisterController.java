@@ -14,6 +14,7 @@ import com.sellgod.propaganda.entity.UserEntity;
 import com.sellgod.propaganda.service.UserOperationService;
 import com.sellgod.propaganda.service.UserService;
 import com.sellgod.propaganda.utils.R;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,9 +23,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
+@Slf4j
 public class RegisterController {
 
 
@@ -44,7 +48,6 @@ public class RegisterController {
            }
            userEntity  = new UserEntity();
            BeanUtils.copyProperties(registerDto,userEntity);
-           //测试提交
            if(userService.insert(userEntity)) {
                return R.ok();
            }else{
@@ -53,7 +56,16 @@ public class RegisterController {
        }
        @PostMapping(value = "/fileUpload")
        public R upload(@RequestParam(value = "file") MultipartFile file) {
-          return  userOperationService.saveFile(file);
+           R r = userOperationService.saveFile(file);
+           return  r;
+       }
+
+       @GetMapping(value = "/banaer")
+       public R getBananer(){
+           List<String>   imgs =  new ArrayList<>();
+           imgs.add("http://pn5mg6279.bkt.clouddn.com/1551668884147.jpg");
+           imgs.add("http://pn5mg6279.bkt.clouddn.com/1551668884147.jpg");
+           return R.withD(imgs);
        }
 
 
