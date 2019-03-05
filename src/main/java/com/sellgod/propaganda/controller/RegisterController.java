@@ -10,6 +10,8 @@ import com.qiniu.storage.UploadManager;
 import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.util.Auth;
 import com.sellgod.propaganda.dto.RegisterDto;
+import com.sellgod.propaganda.entity.BanaerDto;
+import com.sellgod.propaganda.entity.Imgs;
 import com.sellgod.propaganda.entity.UserEntity;
 import com.sellgod.propaganda.service.UserOperationService;
 import com.sellgod.propaganda.service.UserService;
@@ -62,10 +64,16 @@ public class RegisterController {
 
        @GetMapping(value = "/banaer")
        public R getBananer(){
-           List<String>   imgs =  new ArrayList<>();
-           imgs.add("http://pn5mg6279.bkt.clouddn.com/1551668884147.jpg");
-           imgs.add("http://pn5mg6279.bkt.clouddn.com/1551668884147.jpg");
-           return R.withD(imgs);
+           List<Imgs>   mlist =  new ArrayList<>();
+           Imgs  imgs1 = new Imgs();
+           imgs1.setImgUrl("http://pn5mg6279.bkt.clouddn.com/1551668884147.jpg");
+           Imgs  imgs2 = new Imgs();
+           imgs2.setImgUrl("http://pn5mg6279.bkt.clouddn.com/1551668884147.jpg");
+           mlist.add(imgs1);
+           mlist.add(imgs2);
+           BanaerDto  banaerDto  = new BanaerDto();
+           banaerDto.setImgs(mlist);
+           return R.withD(mlist);
        }
 
 
