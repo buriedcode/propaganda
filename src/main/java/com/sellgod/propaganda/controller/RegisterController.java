@@ -37,6 +37,8 @@ public class RegisterController {
 
     @Autowired
     private UserOperationService  userOperationService;
+
+
     @Autowired
     private UserService   userService;
        @PostMapping(value = "/register")
@@ -68,12 +70,37 @@ public class RegisterController {
            Imgs  imgs1 = new Imgs();
            imgs1.setImgUrl("http://pn5mg6279.bkt.clouddn.com/1551668884147.jpg");
            Imgs  imgs2 = new Imgs();
-           imgs2.setImgUrl("http://pn5mg6279.bkt.clouddn.com/1551668884147.jpg");
+           imgs2.setImgUrl("http://pn5mg6279.bkt.clouddn.com/1551844224157.jpg");
+
+           Imgs  imgs3 = new Imgs();
+           imgs3.setImgUrl("http://pn5mg6279.bkt.clouddn.com/1551844860321.jpg");
+           Imgs  imgs4 = new Imgs();
+           imgs4.setImgUrl("http://pn5mg6279.bkt.clouddn.com/1551844860321.jpg");
+           Imgs  imgs5 = new Imgs();
+           imgs5.setImgUrl("http://pn5mg6279.bkt.clouddn.com/1551844860321.jpg");
+
+           Imgs  imgs6 = new Imgs();
+           imgs6.setImgUrl("http://pn5mg6279.bkt.clouddn.com/1551699503459.jpg");
+           Imgs  imgs7 = new Imgs();
+           imgs7.setImgUrl("http://pn5mg6279.bkt.clouddn.com/1551844860321.jpg");
+           Imgs  imgs8 = new Imgs();
+           imgs8.setImgUrl("http://pn5mg6279.bkt.clouddn.com/1551699503459.jpg");
            mlist.add(imgs1);
            mlist.add(imgs2);
+           mlist.add(imgs3);
+           mlist.add(imgs4);
+/*           mlist.add(imgs5);
+           mlist.add(imgs6);
+           mlist.add(imgs7);
+           mlist.add(imgs8);*/
            BanaerDto  banaerDto  = new BanaerDto();
            banaerDto.setImgs(mlist);
            return R.withD(mlist);
+       }
+
+       @GetMapping(value = "/users")
+       private R getUserList(){
+           return userOperationService.getUsers();
        }
 
 

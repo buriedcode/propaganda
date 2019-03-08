@@ -1,12 +1,16 @@
 package com.sellgod.propaganda.entity;
 
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import lombok.Data;
+
+import javax.validation.constraints.NotBlank;
 
 @Data
 @TableName("user_account")
 public class UserEntity {
 
+    @TableId
     private long id;
 
     private String userName;

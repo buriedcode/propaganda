@@ -8,5 +8,7 @@ public interface UserOperationService {
 
      R saveFile( MultipartFile file);
 
+     R getUsers();
+
 
 }

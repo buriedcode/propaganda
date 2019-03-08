@@ -1,5 +1,6 @@
 package com.sellgod.propaganda.service.impl;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.google.gson.Gson;
 import com.qiniu.common.QiniuException;
 import com.qiniu.common.Zone;
@@ -9,9 +10,12 @@ import com.qiniu.storage.UploadManager;
 import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.util.Auth;
 import com.sellgod.propaganda.dto.UploadFileDto;
+import com.sellgod.propaganda.dto.UserListDto;
 import com.sellgod.propaganda.entity.FileEntity;
+import com.sellgod.propaganda.entity.UserEntity;
 import com.sellgod.propaganda.service.FileService;
 import com.sellgod.propaganda.service.UserOperationService;
+import com.sellgod.propaganda.service.UserService;
 import com.sellgod.propaganda.utils.R;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +24,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class UserOperationImpl implements UserOperationService {
 
@@ -36,6 +43,9 @@ public class UserOperationImpl implements UserOperationService {
 
     @Value("${qiniu.URL}")
     private String url;
+
+    @Autowired
+    private UserService userService;
 
     @Override
     public R saveFile(MultipartFile file) {
@@ -56,6 +66,21 @@ public class UserOperationImpl implements UserOperationService {
             e.printStackTrace();
         }
         return R.ok();
+    }
+
+    @Override
+    public R getUsers() {
+        List<UserListDto>  userListDtos  = new ArrayList<>();
+        List<UserEntity> userEntityList  = userService.selectList(new EntityWrapper<>());
+        for(int i=0;i<userEntityList.size();i++){
+            UserListDto  userListDto  = new UserListDto();
+            FileEntity  fileEntity  = fileService.selectById(userEntityList.get(i).getPicId());
+            userListDto.setImg(fileEntity.getUrl());
+            userListDto.setInfo(userEntityList.get(i).getInfo());
+            userListDto.setName(userEntityList.get(i).getUserName());
+            userListDtos.add(userListDto);
+        }
+        return R.withD(userListDtos);
     }
 
 
