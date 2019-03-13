@@ -16,4 +16,27 @@ public class UserListDto {
 
     private String info;
 
+    public String getName() {
+        return name;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public String getInfo() {
+        return info;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+
+    public void setInfo(String info) {
+        this.info = info;
+    }
 }

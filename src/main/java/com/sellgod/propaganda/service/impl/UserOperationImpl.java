@@ -1,6 +1,7 @@
 package com.sellgod.propaganda.service.impl;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.google.gson.Gson;
 import com.qiniu.common.QiniuException;
 import com.qiniu.common.Zone;
@@ -9,7 +10,7 @@ import com.qiniu.storage.Configuration;
 import com.qiniu.storage.UploadManager;
 import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.util.Auth;
-import com.sellgod.propaganda.dto.UploadFileDto;
+import com.sellgod.propaganda.dto.PageDto;
 import com.sellgod.propaganda.dto.UserListDto;
 import com.sellgod.propaganda.entity.FileEntity;
 import com.sellgod.propaganda.entity.UserEntity;
@@ -69,9 +70,12 @@ public class UserOperationImpl implements UserOperationService {
     }
 
     @Override
-    public R getUsers() {
+    public R getUsers(PageDto pageDto) {
         List<UserListDto>  userListDtos  = new ArrayList<>();
-        List<UserEntity> userEntityList  = userService.selectList(new EntityWrapper<>());
+        /*List<UserEntity> userEntityList  = userService.selectList(new EntityWrapper<>());*/
+        EntityWrapper  ew = new EntityWrapper();
+        Page<UserEntity> page = userService.selectPage(new Page<UserEntity>(pageDto.getCurrentPage(), pageDto.getPageSize()),ew);
+        List<UserEntity> userEntityList = page.getRecords();
         for(int i=0;i<userEntityList.size();i++){
             UserListDto  userListDto  = new UserListDto();
             FileEntity  fileEntity  = fileService.selectById(userEntityList.get(i).getPicId());
