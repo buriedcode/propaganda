@@ -4,9 +4,9 @@ spring:
 
       datasource:
         driver-class-name: com.mysql.jdbc.Driver
-        url: jdbc:mysql://localhost:3306/godsell?useUnicode=true&amp;characterEncoding=UTF-8
+        url: jdbc:mysql://47.107.86.141:3306/godsell?useUnicode=true&amp;characterEncoding=UTF-8
         username: root
-        password: 123456
+        password:
         type: com.alibaba.druid.pool.DruidDataSource
         dbcp2:                                          # 进行数据库连接池的配置
               min-idle: 5                                   # 数据库连接池的最小维持连接数
