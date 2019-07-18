@@ -11,6 +11,26 @@ public class FileEntity {
 
     private String url;
 
+    private int width;
+
+    private int height;
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
     public long getId() {
         return id;
     }

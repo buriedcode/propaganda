@@ -23,8 +23,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,8 +61,12 @@ public class UserOperationImpl implements UserOperationService {
             String realName = String.valueOf(System.currentTimeMillis())   + fileNameExtension;
             String picUrl = uploadQNImg(inputStream,realName);
 
+            int width = getImgWidth(file);
+            int height = getImgHeight(file);
             FileEntity  fileEntity  = new FileEntity();
             fileEntity.setUrl(picUrl);
+            fileEntity.setHeight(height);
+            fileEntity.setWidth(width);
             if(fileService.insert(fileEntity)){
                 return R.withD(fileEntity);
             }
@@ -67,6 +75,38 @@ public class UserOperationImpl implements UserOperationService {
             e.printStackTrace();
         }
         return R.ok();
+    }
+
+    public  int getImgWidth(MultipartFile fileInputStream) {
+        BufferedImage src = null;
+        int ret = -1;
+        try {
+            //is = new FileInputStream(file);
+            src = ImageIO.read(fileInputStream.getInputStream());
+            ret = src.getWidth(null); // 得到源图宽
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ret;
+    }
+
+
+    /**
+     * 获取图片高度
+     * @param file  图片文件
+     * @return 高度
+     */
+    public  int getImgHeight(MultipartFile file) {
+        BufferedImage src = null;
+        int ret = -1;
+        try {
+
+            src = ImageIO.read(file.getInputStream());
+            ret = src.getHeight(null); // 得到源图高
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ret;
     }
 
     @Override
