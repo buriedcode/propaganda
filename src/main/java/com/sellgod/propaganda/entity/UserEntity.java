@@ -24,7 +24,7 @@ public class UserEntity {
     /**
      * 票数
      */
-    private int count;
+    private int count=0;
 
 
     public int getCount() {

@@ -2,6 +2,7 @@ package com.sellgod.propaganda.service.impl;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.qiniu.common.QiniuException;
 import com.qiniu.common.Zone;
@@ -11,6 +12,7 @@ import com.qiniu.storage.UploadManager;
 import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.util.Auth;
 import com.sellgod.propaganda.dto.PageDto;
+import com.sellgod.propaganda.dto.UserInfoDto;
 import com.sellgod.propaganda.dto.UserListDto;
 import com.sellgod.propaganda.entity.FileEntity;
 import com.sellgod.propaganda.entity.UserEntity;
@@ -18,19 +20,30 @@ import com.sellgod.propaganda.service.FileService;
 import com.sellgod.propaganda.service.UserOperationService;
 import com.sellgod.propaganda.service.UserService;
 import com.sellgod.propaganda.utils.R;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
+import javax.security.auth.message.AuthException;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class UserOperationImpl implements UserOperationService {
@@ -48,6 +61,12 @@ public class UserOperationImpl implements UserOperationService {
 
     @Value("${qiniu.URL}")
     private String url;
+
+    @Value("${app.wx.appid}")
+    private String appid;
+
+    @Value("${app.wx.secret}")
+    private String secret;
 
     @Autowired
     private UserService userService;
@@ -116,15 +135,48 @@ public class UserOperationImpl implements UserOperationService {
         EntityWrapper  ew = new EntityWrapper();
         Page<UserEntity> page = userService.selectPage(new Page<UserEntity>(pageDto.getCurrentPage(), pageDto.getPageSize()),ew);
         List<UserEntity> userEntityList = page.getRecords();
-        for(int i=0;i<userEntityList.size();i++){
-            UserListDto  userListDto  = new UserListDto();
-            FileEntity  fileEntity  = fileService.selectById(userEntityList.get(i).getPicId());
-            userListDto.setImg(fileEntity.getUrl());
-            userListDto.setInfo(userEntityList.get(i).getInfo());
-            userListDto.setName(userEntityList.get(i).getUserName());
-            userListDtos.add(userListDto);
+        List<UserInfoDto>  userInfoDtoList  = new ArrayList<>();
+        for(int i=0;i<userEntityList.size();i++) {
+            UserInfoDto userInfoDto = new UserInfoDto();
+            FileEntity fileEntity = fileService.selectById(userEntityList.get(i).getPicId());
+            userInfoDto.setCount(userEntityList.get(i).getCount());
+            userInfoDto.setHeight(fileEntity.getHeight());
+            userInfoDto.setWidth(fileEntity.getWidth());
+            userInfoDto.setName(userEntityList.get(i).getUserName());
+            userInfoDto.setUrl(fileEntity.getUrl());
+            userInfoDtoList.add(userInfoDto);
         }
-        return R.withD(userListDtos);
+        return R.withD(userInfoDtoList);
+    }
+
+    @Override
+    public String getOpenId(String code) throws Exception {
+        String wxUrl = String.format("https://api.weixin.qq.com/sns/jscode2session?appid=%s&secret=%s&js_code=%s&grant_type=authorization_code", appid, secret, code);
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        CloseableHttpResponse closeableHttpResponse = httpClient.execute(new HttpGet(wxUrl));
+        int statusCode = closeableHttpResponse.getStatusLine().getStatusCode();
+        HttpEntity closeableHttpResponseEntity = closeableHttpResponse.getEntity();
+        String result = EntityUtils.toString(closeableHttpResponseEntity, StandardCharsets.UTF_8);
+        closeableHttpResponse.close();
+        String openId = "";
+        if (statusCode == org.apache.http.HttpStatus.SC_OK) {
+            ObjectMapper obj = new ObjectMapper();
+            Map mapType = new HashMap<>();
+            try {
+                mapType = obj.readValue(result, Map.class);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (mapType.containsKey("openid")) {
+                openId = mapType.get("openid").toString();
+
+            } else {
+                throw new AuthException(mapType.get("errmsg").toString());
+            }
+        } else {
+            throw new Exception(result);
+        }
+        return openId;
     }
 
 

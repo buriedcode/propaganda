@@ -1,18 +1,25 @@
 server:
   port: 8016
 spring:
-
+      servlet:
+       multipart:
+         max-file-size: 102400000
       datasource:
         driver-class-name: com.mysql.jdbc.Driver
         url: jdbc:mysql://47.107.86.141:3306/godsell?useUnicode=true&amp;characterEncoding=UTF-8
         username: root
-        password:
+        password: 123456
         type: com.alibaba.druid.pool.DruidDataSource
         dbcp2:                                          # 进行数据库连接池的配置
               min-idle: 5                                   # 数据库连接池的最小维持连接数
               initial-size: 5                               # 初始化提供的连接数
               max-total: 5                                  # 最大的连接数
               max-wait-millis: 200                          # 等待连接获取的最大超时时间
+
+      mvc:
+        static-path-pattern: /**
+        resources:
+          static-locations: classpath:/static/
 
 mybatis-plus:
     mapper-locations: classpath:mapper/**/*.xml
@@ -63,8 +70,13 @@ land:
 qiniu:
    AK: teJa9qnHMTWeKBW6bSrwsQZFS7b42aW5vGJD0I32
    SK: myC3egSPOAm9jkhmIXtcKl91pIfn5if-FeBZUIcZ
-   bucketname: godsell
-   URL: http://pn5mg6279.bkt.clouddn.com
+   bucketname: gold
+   URL: http://puqbaf6ym.bkt.clouddn.com
+
+app:
+  wx:
+   appid: wxfa81b06bca854196
+   secret: 5434138a76f914e6896450d4b35706e0
 
 
 

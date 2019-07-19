@@ -10,5 +10,7 @@ public interface UserOperationService {
 
      R getUsers(PageDto page);
 
+     String getOpenId(String code) throws Exception;
+
 
 }

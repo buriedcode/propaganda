@@ -54,16 +54,21 @@ public class RegisterController {
            return userOperationService.saveFile(file);
        }
 
+    @GetMapping(value = "/wxLogin")
+    public R wxLogin(@RequestParam String code) throws Exception{
+        return R.withD(userOperationService.getOpenId(code));
+    }
+
        @GetMapping(value = "/banaer")
        public R getBananer(){
            List<Imgs>   mlist =  new ArrayList<>();
            Imgs  imgs1 = new Imgs();
-           imgs1.setImgUrl("http://pn5mg6279.bkt.clouddn.com/1551668884147.jpg");
+           imgs1.setImgUrl("http://pic37.nipic.com/20140113/8800276_184927469000_2.png");
            Imgs  imgs2 = new Imgs();
-           imgs2.setImgUrl("http://pn5mg6279.bkt.clouddn.com/1551844224157.jpg");
+           imgs2.setImgUrl("http://pic1.win4000.com/wallpaper/c/53cdd1f7c1f21.jpg");
 
            Imgs  imgs3 = new Imgs();
-           imgs3.setImgUrl("http://pn5mg6279.bkt.clouddn.com/1551844860321.jpg");
+           imgs3.setImgUrl("http://pic36.nipic.com/20131129/8821914_111419739001_2.jpg");
            Imgs  imgs4 = new Imgs();
            imgs4.setImgUrl("http://pn5mg6279.bkt.clouddn.com/1551844860321.jpg");
            Imgs  imgs5 = new Imgs();
@@ -78,7 +83,7 @@ public class RegisterController {
            mlist.add(imgs1);
            mlist.add(imgs2);
            mlist.add(imgs3);
-           mlist.add(imgs4);
+           //mlist.add(imgs4);
 /*           mlist.add(imgs5);
            mlist.add(imgs6);
            mlist.add(imgs7);
@@ -122,7 +127,7 @@ public class RegisterController {
        }
 
        @PostMapping(value = "/users")
-       private R getUserList(@RequestBody PageDto page){
+       public R getList(@RequestBody PageDto page){
            return userOperationService.getUsers(page);
        }
 
